@@ -1,9 +1,23 @@
-# This is where you define the image for
-# the server B which processes the orders.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# You should then use Noje image from Docker Hub as the basis,
-# and then follow the instructions linked to in assignment document.
-# You should be able to produce a working installation by just
-# following the instructions.
+FROM mcr.microsoft.com/dotnet/runtime:8.0 AS base
+USER app
+WORKDIR /app
 
-#FROM node:version...
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["server-b.csproj", "."]
+RUN dotnet restore "./././server-b.csproj"
+COPY . .
+WORKDIR "/src/."
+RUN dotnet build "./server-b.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./server-b.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "server-b.dll"]

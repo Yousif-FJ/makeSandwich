@@ -1,12 +1,25 @@
-# This is where you define the image for
-# the server A, which implements the Swagger API.
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# Start by copying the server stub to this directory.
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER app
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
 
-# You should then use Noje image from Docker Hub as the basis,
-# and then follow the instructions linked to in assignment document.
-# You should be able to produce a working installation by just
-# following the instructions.
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["backend/server-a/server-a.csproj", "backend/server-a/"]
+RUN dotnet restore "./backend/server-a/./server-a.csproj"
+COPY . .
+WORKDIR "/src/backend/server-a"
+RUN dotnet build "./server-a.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./server-a.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
-#FROM node:version...
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "server-a.dll"]
