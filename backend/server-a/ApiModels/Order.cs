@@ -1,6 +1,6 @@
 namespace server_a.ApiModels
 {
-    public partial class Order 
+    public class Order 
     {
         public long? Id { get; set; }
         public long? SandwichId { get; set; }

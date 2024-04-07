@@ -1,30 +1,8 @@
-# This is the docker-compose-yml file that must be able to start
-# your group's backend.
-
-# Remember to comment this file well!
-
-# After you have Docker and Docker Compose installed,
-# and this file is ready, you use this file and run it with:
-# `docker-compose up --build`
-
 version: "3"
 
 services:
-  # An example configuration of server A for groups' convenience.
-  # server-a is based on the Docker image the groups produce and build themselves.
   server-a:
-    # Change the image information to match your server A image
-    image: # $USERNAME/$IMAGENAME:$TAG, something like group000/node-swagger:3a
-    # 'depends_on' and 'command' are  to be used when used
-    # with RabbitMQ service in this file. 'depends_on' must be set
-    # to RabbitMQ service's name from this file, and 'command'
-    # can be modified to be anything, but what is given should
-    # work. Just uncomment them
-    # depends_on:
-    #   -  rapid-runner-rabbit
-    # command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
     build:
-      dockerfile: Dockerfile
       context:  ./backend/server-a
     ports:
       - "12345:8080"
@@ -37,27 +15,21 @@ services:
   # A set of needed Docker instructions like 'image:' are shown
   # below, groups should set their values. Groups are free to
   # CRUD the set of instructions as they see fit.
-  # rapid-runner-rabbit:
-  #   image:
-  #   ports:
-  #   expose:
-  #   networks:
+  rabbitmq:
+    image: rabbitmq
+    networks:
+      - backend
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+    environment:
+    - RABBITMQ_DEFAULT_USER=guest
+    - RABBITMQ_DEFAULT_PASS=guest
 
-  # much of the server-b service entry can be copied from server-a
-  # service above. server-b directory Dockerfile has more
-  # information.
-  # A set of needed Docker instructions like 'image:' are shown
-  # below, groups should set their values. Groups are free to
-  # CRUD this set of instructions as they see fit.
-  # server-b:
-      # image:
-      # depends_on:
-      # command: ["./utils/wait-for-it.sh", "rapid-runner-rabbit:5672", "--",  "npm", "start"]
-      # build:
-      #   dockerfile:
-      #   context:
-      # expose:
-      # networks:
+  server-b:
+    build:
+      context:  ./backend/server-a
+
 
   # Your group might want to use a database to store some data
   # You can use any database you wish, PostgreSQL, MySQL and

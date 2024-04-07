@@ -96,10 +96,11 @@ namespace server_a.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(List<Sandwich>))]
         public virtual IActionResult GetSandwiches()
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(ArrayOfSandwiches));
-
-            throw new NotImplementedException();
+            var result = new List<Sandwich> {
+                new() { Id = 1, Name = "Ham and cheese", BreadType = BreadTypeEnum.Wheat},
+                new() { Id = 2, Name = "Vegetarian", BreadType = BreadTypeEnum.Rye }
+            };
+            return Ok(result);
         }
 
         /// <summary>
