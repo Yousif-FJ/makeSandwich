@@ -3,11 +3,13 @@ version: "3"
 services:
   server-a:
     build:
-      context:  ./backend/server-a
+      context: ./backend/server-a
     ports:
       - "12345:8080"
     networks:
       - backend
+    environment:
+      - RabbitMQ_Host=rabbitmq
 
   # You can base this service on a rabbitmq Docker Hub image.
   # You need to expose the RabbitMQ port to other containers
@@ -16,7 +18,7 @@ services:
   # below, groups should set their values. Groups are free to
   # CRUD the set of instructions as they see fit.
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3-management
     networks:
       - backend
     ports:
@@ -28,7 +30,11 @@ services:
 
   server-b:
     build:
-      context:  ./backend/server-a
+      context: ./backend/server-b
+    environment:
+      - RabbitMQ_Host=rabbitmq
+    networks:
+      - backend
 
 
   # Your group might want to use a database to store some data

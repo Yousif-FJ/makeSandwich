@@ -18,7 +18,7 @@ namespace server_a.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public class SandwichApiController : ControllerBase
+    public class SandwichController : ControllerBase
     {
         /// <summary>
         /// Add a new sandwich to the store. Needs an API key.

@@ -2,6 +2,9 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using server_a.ApiModels;
 using RabbitMQ.Client;
+using System.Text.Json;
+using System.Text;
+using server_a.Services;
 
 namespace server_a.Controllers
 {
@@ -9,11 +12,14 @@ namespace server_a.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public class OrderApiController : ControllerBase
+    public class OrderController(ConnectionFactory rabbitFactory, OrdersCollection orders) 
+        : ControllerBase
     {
+
         /// <summary>
         /// Add an order for an sandwich
         /// </summary>
+
 
         /// <param name="order">place an order for a sandwich</param>
         /// <response code="200">successful operation</response>
@@ -23,11 +29,20 @@ namespace server_a.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(Order))]
         public IActionResult AddOrder([FromBody] Order order)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(Order));
+            var orderId = orders.LastOrDefault()?.Id ?? 0;
+            order.Id = orderId + 1;
 
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400);
+            using var rabbitConnection = rabbitFactory.CreateConnection();
+            using var channel = rabbitConnection.CreateModel();
+
+            channel.ExchangeDeclare("orders", ExchangeType.Direct);
+            channel.QueueDeclare("orders", false, false, false, null);
+            channel.QueueBind("orders", "orders", "order");
+
+            var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order));
+            channel.BasicPublish("orders", "order", null, message);
+
+            orders.Add(order);
 
             return Ok(order);
         }
@@ -44,17 +59,14 @@ namespace server_a.Controllers
         [Route("/v1/order/{orderId}")]
         [ProducesResponseType(statusCode: 200, type: typeof(Order))]
         public IActionResult GetOrderById([FromRoute][Required] long? orderId)
-        {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(Order));
+        {   
+            var order = orders.FirstOrDefault(o => o.Id == orderId);
+            if (order == null)
+            {
+                return NotFound();
+            }
 
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400);
-
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404);
-
-            return Ok();
+            return Ok(order);
         }
 
         /// <summary>
@@ -67,10 +79,7 @@ namespace server_a.Controllers
         [ProducesResponseType(statusCode: 200, type: typeof(List<Order>))]
         public IActionResult GetOrders()
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(ArrayOfOrders));
-
-            return Ok();
+            return Ok(orders);
         }
     }
 }

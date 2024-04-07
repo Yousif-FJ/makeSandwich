@@ -18,7 +18,7 @@ namespace server_a.Controllers
     /// 
     /// </summary>
     [ApiController]
-    public class UserApiController : ControllerBase
+    public class UserController : ControllerBase
     {
         /// <summary>
         /// Create user
