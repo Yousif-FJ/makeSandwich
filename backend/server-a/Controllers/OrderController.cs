@@ -4,13 +4,10 @@ using server_a.ApiModels;
 using RabbitMQ.Client;
 using System.Text.Json;
 using System.Text;
-using server_a.Services;
+using server_a.Helpers;
 
 namespace server_a.Controllers
 {
-    /// <summary>
-    /// 
-    /// </summary>
     [ApiController]
     public class OrderController(ConnectionFactory rabbitFactory, OrdersCollection orders) 
         : ControllerBase
@@ -19,8 +16,6 @@ namespace server_a.Controllers
         /// <summary>
         /// Add an order for an sandwich
         /// </summary>
-
-
         /// <param name="order">place an order for a sandwich</param>
         /// <response code="200">successful operation</response>
         /// <response code="400">Order not created</response>
@@ -31,13 +26,13 @@ namespace server_a.Controllers
         {
             var orderId = orders.LastOrDefault()?.Id ?? 0;
             order.Id = orderId + 1;
+            order.Status = StatusEnum.InQueue;
 
             using var rabbitConnection = rabbitFactory.CreateConnection();
-            using var channel = rabbitConnection.CreateModel();
 
-            channel.ExchangeDeclare("orders", ExchangeType.Direct);
-            channel.QueueDeclare("orders", false, false, false, null);
-            channel.QueueBind("orders", "orders", "order");
+            rabbitConnection.EnsureOrdersQueueCreated();
+
+            using var channel = rabbitConnection.CreateModel();
 
             var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order));
             channel.BasicPublish("orders", "order", null, message);
@@ -72,7 +67,6 @@ namespace server_a.Controllers
         /// <summary>
         /// Get a list of all orders. Empty array if no orders are found.
         /// </summary>
-
         /// <response code="200">successful operation</response>
         [HttpGet]
         [Route("/v1/order")]

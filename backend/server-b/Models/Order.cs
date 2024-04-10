@@ -1,6 +1,6 @@
-namespace server_a.ApiModels
+namespace server_b.Models
 {
-    public class Order 
+    public class Order
     {
         public long? Id { get; set; }
         public long? SandwichId { get; set; }
@@ -10,13 +10,11 @@ namespace server_a.ApiModels
     public enum StatusEnum
     {
 
-        Ordered = 1,
-        Received = 2,
-        InQueue = 3,
-
-        Ready = 4,
-
-        Failed= 5
+        Ordered,
+        InQueue,
+        Received,
+        Ready,
+        Failed
     }
 }
 
