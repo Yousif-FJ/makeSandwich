@@ -1,3 +1,14 @@
+### Course information 
+Author information:
+- Student Name: Yousif Al-Baghdadi
+- Student Number: 152106946
+- Student Email: yousif.al-baghdadi@tuni.fi 
+
+Group Information (single person group):
+- Group Name: oneteam
+- GitLab repo URL: https://course-gitlab.tuni.fi/compcs510-spring2024/oneteam
+
+
 ### Architecture
 The architecture and component functions will be the same as the architecture given in the assignment specs.
 
@@ -30,7 +41,7 @@ I will use vue.Js with TS for the frontend. The choice is easy as it has a lot o
 - [Opinion] React is more popular than Vue.JS not because it is better, it is just the timing of the release.
  
 ### How to try the system
-Simply running docker compose file from the root folder should be enough.
+Ensure latest version of docker desktop is installed and run docker compose commands:
 
 `docker-compose up -d`
 

@@ -1,20 +1,34 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap"
+
 </script>
 
 <template>
   <header>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+          aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/">Home</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/about">About</RouterLink>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </header>
 
-  <RouterView />
+  <div class ="container-fluid">
+    <RouterView />
+  </div>
 </template>

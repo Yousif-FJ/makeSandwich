@@ -1,5 +1,4 @@
-version: "3"
-
+name: sandwich-maker
 services:
   rabbitmq:
     image: rabbitmq:3-management
@@ -16,8 +15,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 10s
-
 
   server-a:
     build:
@@ -56,23 +53,5 @@ services:
       - server-a
 
 
-  # Your group might want to use a database to store some data
-  # You can use any database you wish, PostgreSQL, MySQL and
-  # MongoDB have rather good Docker documentation and examples.
-  # But some groups could find a way to do this without
-  # databases
-  # database-service would go here.
-  #database:
-
-# Here we create a named network, that all the backend components
-# must be added to for them to be able to communicate through
-# exposed ports.
 networks:
   backend:
-
-# If you use databases for storing information, you can define
-# their volumes here.
-# Documentation: https://docs.docker.com/storage/volumes/
-# Personally I like to look at the database's image's Dockerfile
-# in the Docker Hub to see what directory it uses to store data.
-# volumes:
