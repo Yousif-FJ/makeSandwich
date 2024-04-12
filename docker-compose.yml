@@ -11,6 +11,13 @@ services:
     environment:
     - RABBITMQ_DEFAULT_USER=guest
     - RABBITMQ_DEFAULT_PASS=guest
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
 
   server-a:
     build:
@@ -22,7 +29,8 @@ services:
     environment:
       - RabbitMQ_Host=rabbitmq
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
 
 
   server-b:
@@ -30,11 +38,22 @@ services:
       context: ./backend/server-b
     environment:
       - RabbitMQ_Host=rabbitmq
-    restart: always
     networks:
       - backend
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
+
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "12346:8080"
+    networks:
+      - backend
+    depends_on:
+      - server-a
 
 
   # Your group might want to use a database to store some data
