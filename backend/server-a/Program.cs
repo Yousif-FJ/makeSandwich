@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using RabbitMQ.Client;
 using server_a.BackgroundWorkers;
 using server_a.Helpers;
@@ -6,8 +7,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(opts =>
+    {
+        var enumConverter = new JsonStringEnumConverter();
+        opts.JsonSerializerOptions.Converters.Add(enumConverter);
+    });
+    
 builder.Services.AddSingleton<OrdersCollection>();
+
+builder.Services.AddCors(option =>{
+    option.AddDefaultPolicy(policyBuilder => {
+        policyBuilder.WithOrigins("http://localhost:5173", "http://localhost:12346")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+
+});
 
 var rabbitMqHost = builder.Configuration.GetValue<string>("RabbitMQ_Host");
 Console.WriteLine($"RabbitMQ Host: {rabbitMqHost}");
@@ -26,6 +41,7 @@ app.UseSwaggerUI(c =>
 });
 app.UseSwaggerUI();
 
+app.UseCors();
 
 app.MapControllers();
 app.MapSwagger();
