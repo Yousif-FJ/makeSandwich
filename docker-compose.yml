@@ -49,7 +49,7 @@ services:
     build:
       context: ./frontend
     ports:
-      - "12346:8080"
+      - "12346:80"
     networks:
       - backend
     depends_on:
