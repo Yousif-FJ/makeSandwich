@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using RabbitMQ.Client;
-using server_a.BackgroundWorkers;
 using server_a.Helpers;
+using server_a.HostedService;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -6,10 +6,10 @@ using server_b.Models;
 
 namespace server_b;
 
-public class SandwichMaker(ILogger<SandwichMaker> logger, ConnectionFactory rabbitFactory) 
+public class OrderProcessor(ILogger<OrderProcessor> logger, ConnectionFactory rabbitFactory) 
     : IHostedService
 {
-    private readonly ILogger<SandwichMaker> _logger = logger;
+    private readonly ILogger<OrderProcessor> _logger = logger;
     private IConnection? _rabbitConnection;
 
     public Task StartAsync(CancellationToken cancellationToken)

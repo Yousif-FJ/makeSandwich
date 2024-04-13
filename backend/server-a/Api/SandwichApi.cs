@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using server_a.ApiModels;
 
-namespace server_a.Controllers
+namespace server_a.Api
 {
     /// <summary>
     /// 
     /// </summary>
     [ApiController]
-    public class SandwichController : ControllerBase
+    public class SandwichApi : ControllerBase
     {
         /// <summary>
         /// Add a new sandwich to the store. Needs an API key.

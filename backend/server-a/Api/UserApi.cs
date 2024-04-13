@@ -12,13 +12,13 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using server_a.ApiModels;
 
-namespace server_a.Controllers
+namespace server_a.Api
 {
     /// <summary>
     /// 
     /// </summary>
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserApi : ControllerBase
     {
         /// <summary>
         /// Create user

@@ -3,7 +3,7 @@ using server_b;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddHostedService<SandwichMaker>();
+builder.Services.AddHostedService<OrderProcessor>();
 
 var rabbitMqHost = builder.Configuration.GetValue<string>("RabbitMQ_Host");
 

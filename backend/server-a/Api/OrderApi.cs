@@ -6,10 +6,10 @@ using System.Text.Json;
 using System.Text;
 using server_a.Helpers;
 
-namespace server_a.Controllers
+namespace server_a.Api
 {
     [ApiController]
-    public class OrderController(ConnectionFactory rabbitFactory, OrdersCollection orders) 
+    public class OrderApi(ConnectionFactory rabbitFactory, OrdersCollection orders) 
         : ControllerBase
     {
 

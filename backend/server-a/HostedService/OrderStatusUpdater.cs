@@ -5,7 +5,7 @@ using RabbitMQ.Client.Events;
 using server_a.ApiModels;
 using server_a.Helpers;
 
-namespace server_a.BackgroundWorkers;
+namespace server_a.HostedService;
 
 public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, ConnectionFactory rabbitFactory,
             OrdersCollection orders) : IHostedService
@@ -23,7 +23,7 @@ public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, ConnectionFa
 
         var consumer = new EventingBasicConsumer(rabbitChannel);
         rabbitChannel.BasicConsume("orderStatusUpdates", true, consumer);
-        consumer.Received += OnOrderUpdateReceived;        
+        consumer.Received += OnOrderUpdateReceived;
 
         return Task.CompletedTask;
     }
