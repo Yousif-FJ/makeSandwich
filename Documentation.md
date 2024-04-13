@@ -12,7 +12,9 @@ Group Information (single person group):
 ### Architecture
 The architecture and component functions will be the same as the architecture given in the assignment specs.
 
-
+Here is diagram describing the overall architecture:
+ ![sandwich maker diagram](<other-files/sandwich maker diagram.png>)
+[Figma view link](https://www.figma.com/file/rZEwcRM8uRmPTwKIJSSEDr/sandwich-maker-diagram?type=whiteboard&node-id=0%3A1&t=X3tzOmvYt47fWMCK-1)
 
 ### Technology Stack
 #### Server A
