@@ -13,8 +13,22 @@ Group Information (single person group):
 The architecture and component functions will be the same as the architecture given in the assignment specs.
 
 Here is diagram describing the overall architecture:
- ![sandwich maker diagram](<other-files/sandwich maker diagram.png>)
+![sandwich maker diagram](other-files/sandwich-maker-diagram.png)
 [Figma view link](https://www.figma.com/file/rZEwcRM8uRmPTwKIJSSEDr/sandwich-maker-diagram?type=whiteboard&node-id=0%3A1&t=X3tzOmvYt47fWMCK-1)
+
+### Patterns used
+
+#### Backend
+Dependency Injection
+
+#### Frontend
+State management Stores
+
+### Features
+
+- Nice and responsive frontend UI
+- Loading indicator and action notification on the UI
+
 
 ### Technology Stack
 #### Server A

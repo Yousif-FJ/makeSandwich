@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { RouterLink, RouterView } from 'vue-router'
+import NotificationComp from './components/NotificationComp.vue';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 
@@ -17,7 +18,10 @@ import "bootstrap"
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <RouterLink class="nav-link" to="/">Home</RouterLink>
+              <RouterLink class="nav-link" to="/">Sandwich</RouterLink>
+            </li>
+            <li class="nav-item">
+              <RouterLink class="nav-link" to="/orders">Orders</RouterLink>
             </li>
             <li class="nav-item">
               <RouterLink class="nav-link" to="/about">About</RouterLink>
@@ -27,8 +31,8 @@ import "bootstrap"
       </div>
     </nav>
   </header>
-
-  <div class ="container-fluid">
+  <NotificationComp></NotificationComp>
+  <main class ="container-fluid mt-1">
     <RouterView />
-  </div>
+  </main>
 </template>
