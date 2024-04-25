@@ -18,16 +18,20 @@ Here is diagram describing the overall architecture:
 
 ### Patterns used
 
-#### Backend
-Dependency Injection
+*Health check for RabbitMQ (compose):* This ensures that RabbitMQ is running healthy before starting the other application, so that they don't crash while attempting to connect.
 
-#### Frontend
-State management Stores
+*Dependency Injection (DI) (server a+b):* This pattern is used by default in asp.net where services are register in a central place. DI is applying `Inversion of control` principle which is part of the S.O.L.I.D principles. The main benefit of DI is that it provide a central place in which all parts of the system are defined which is useful if we need to do integration testing with different configuration or mock services instead of the actual implementation. 
 
-### Features
+*State management Stores (frontend):* using Pinia
 
-- Nice and responsive frontend UI
-- Loading indicator and action notification on the UI
+*Dead letter Queue:* A queue where bad messages are sent(messages that server b can't process). This is very important for real application, because bad letter could cripple a system.
+
+
+### Additional Features
+
+- Nice and responsive frontend UI with Bootstrap
+- Loading indicator (frontend)
+- Action notifications (frontend)
 
 
 ### Technology Stack

@@ -9,7 +9,7 @@ using server_a.Helpers;
 namespace server_a.Api
 {
     [ApiController]
-    public class OrderApi(ConnectionFactory rabbitFactory, OrdersCollection orders) 
+    public class OrderApi(IConnection MqConnection, OrdersCollection orders) 
         : ControllerBase
     {
 
@@ -27,19 +27,35 @@ namespace server_a.Api
             var orderId = orders.LastOrDefault()?.Id ?? 0;
             order.Id = orderId + 1;
             order.Status = StatusEnum.InQueue;
-
-            using var rabbitConnection = rabbitFactory.CreateConnection();
-
-            rabbitConnection.EnsureOrdersQueueCreated();
-
-            using var channel = rabbitConnection.CreateModel();
-
             var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order));
+
+            using var channel = MqConnection.CreateModel();
+            channel.ConfirmSelect();
             channel.BasicPublish("orders", "order", null, message);
+            channel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
 
             orders.Add(order);
 
             return Ok(order);
+        }
+
+        /// <summary>
+        /// Send a bad order to the queue. This is used to test dead letter queue functionality.
+        /// </summary>
+        /// <param name="order">place an order for a sandwich</param>
+        /// <response code="200">successful operation</response>
+        [HttpPost]
+        [Route("/v1/badOrder")]
+        [ProducesResponseType(statusCode: 200)]
+        public IActionResult SendBadOrder()
+        {
+            using var channel = MqConnection.CreateModel();
+
+            var randomObject = new { message = "This will not cripple the system" };
+            var message = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(randomObject));
+            channel.BasicPublish("orders", "order", null, message);
+
+            return Ok();
         }
 
         /// <summary>

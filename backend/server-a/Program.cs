@@ -24,12 +24,9 @@ builder.Services.AddCors(option =>{
 
 });
 
-var rabbitMqHost = builder.Configuration.GetValue<string>("RabbitMQ_Host");
-Console.WriteLine($"RabbitMQ Host: {rabbitMqHost}");
-
 
 builder.Services.AddHostedService<OrderStatusUpdater>();
-builder.Services.AddSingleton(new ConnectionFactory() { HostName = rabbitMqHost });
+builder.Services.AddSingleton(MqConnectionCreator.CreateMqConnection(builder.Configuration));
 
 var app = builder.Build();
 

@@ -7,22 +7,21 @@ using server_a.Helpers;
 
 namespace server_a.HostedService;
 
-public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, ConnectionFactory rabbitFactory,
+public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, IConnection mqConnection,
             OrdersCollection orders) : IHostedService
 {
-    private IConnection? _rabbitConnection;
+    private IModel? _mqChannel;
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _rabbitConnection = rabbitFactory.CreateConnection();
-        var rabbitChannel = _rabbitConnection.CreateModel();
+        _mqChannel = mqConnection.CreateModel();
 
-        rabbitChannel.ExchangeDeclare("orderStatusUpdates", ExchangeType.Direct);
-        rabbitChannel.QueueDeclare("orderStatusUpdates", false, false, false, null);
-        rabbitChannel.QueueBind("orderStatusUpdates", "orderStatusUpdates", "orderStatus");
+        _mqChannel.ExchangeDeclare("orderStatusUpdates", ExchangeType.Direct);
+        _mqChannel.QueueDeclare("orderStatusUpdates", false, false, false, null);
+        _mqChannel.QueueBind("orderStatusUpdates", "orderStatusUpdates", "orderStatus");
 
 
-        var consumer = new EventingBasicConsumer(rabbitChannel);
-        rabbitChannel.BasicConsume("orderStatusUpdates", true, consumer);
+        var consumer = new EventingBasicConsumer(_mqChannel);
+        _mqChannel.BasicConsume("orderStatusUpdates", true, consumer);
         consumer.Received += OnOrderUpdateReceived;
 
         return Task.CompletedTask;
@@ -45,7 +44,7 @@ public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, ConnectionFa
 
     public Task StopAsync(CancellationToken cancellationToken)
     {
-        _rabbitConnection?.Dispose();
+        _mqChannel?.Dispose();
         return Task.CompletedTask;
     }
 }
