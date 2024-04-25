@@ -18,13 +18,13 @@ Here is diagram describing the overall architecture:
 
 ### Patterns used
 
-*Health check for RabbitMQ (compose):* This ensures that RabbitMQ is running healthy before starting the other application, so that they don't crash while attempting to connect.
+**Health check for RabbitMQ (compose):** This ensures that RabbitMQ is running healthy before starting the other application, so that they don't crash while attempting to connect.
 
-*Dependency Injection (DI) (server a+b):* This pattern is used by default in asp.net where services are register in a central place. DI is applying `Inversion of control` principle which is part of the S.O.L.I.D principles. The main benefit of DI is that it provide a central place in which all parts of the system are defined which is useful if we need to do integration testing with different configuration or mock services instead of the actual implementation. 
+**Dependency Injection (DI) (server a+b):** This pattern is used by default in asp.net where services are register in a central place. DI is applying `Inversion of control` principle which is part of the S.O.L.I.D principles. The main benefit of DI is that it provide a central place in which all parts of the system are defined which is useful if we need to do integration testing with different configuration or mock services instead of the actual implementation. 
 
-*State management Stores (frontend):* using Pinia
+**State management Stores (frontend):** using Pinia. This pattern is very useful to ensure that component are only concerned with the actual data rather than state.
 
-*Dead letter Queue:* A queue where bad messages are sent(messages that server b can't process). This is very important for real application, because bad letter could cripple a system.
+**Dead letter Queue (server b):** A queue where bad messages are sent(messages that server b can't process). This is very important for real application, because bad letter could cripple a system.
 
 
 ### Additional Features
@@ -37,7 +37,12 @@ Here is diagram describing the overall architecture:
 
 ### Technology Stack
 #### Server A
-For this server, asp.net 8 with C# was used, mainly because developer familiarity with it. Here some reasons for using dotnet:
+ASP.NET (Core) 8 with C#.
+
+Using Controller Web API template.
+
+Reasons for using the technology:
+- The developer is familiar with the framework.
 - Great performance, C# is one of the best performing web frameworks. 
 - Out-of-the-box support for many modern web application patterns. for example:
     - Support for Logging providers.
@@ -47,22 +52,50 @@ For this server, asp.net 8 with C# was used, mainly because developer familiarit
 - Wide selection of community developed packages (just like NPM) like Rabbit MQ drivers, database drivers and so on.
 - It is worth noting that modern asp.net 8 is cross-platform, cloud native and open source framework.
 - Strongly types programming language offers the ability to catch error early.
-- [Opinion] Strongly typed languages are easier to work with.
+
+##### Other libraries
+- **AspNetCore.OpenApi**: Libraries that facilitate work with open API specs.
+- **Swashbuckle.AspNetCore**: ASP.NET library for swagger UI.
+- **RabbitMQ.Client**: Official RabbitMQ client.
+- **SignalR**: Built-in with ASP.NET, allow for easy real time communication using Websocket or other methods.
+
 
 
 #### Server B
-Dotnet 8 with C# will also be used, because the code will be similar to Server A and hence enhance productivity while the framework choice reasons is pretty similar.
+Dotnet 8 service worker C#.
+
+Using service worker template. Which is like a console app but with IHost for long running service which includes tooling for DI and other services like configuration, logging, etc..
+
+Reasons for using the technology:
+- Same reasons as server A
+
+##### Other libraries
+- **RabbitMQ.Client**: Official RabbitMQ client.
 
 
 #### Frontend
-I will use vue.Js with TS for the frontend. The choice is easy as it has a lot of advantages compared to React and other frameworks:
-- Light-weight and better performance.
+vue.Js with TS for the frontend. 
+
+Reasons for using the technology::
+- Light-weight and good performance.
 - More flexible features with native extensions.
-- [Opinion] More intuitive, less boilerplate code, easier to avoid mistakes.
-- [Opinion] React is more popular than Vue.JS not because it is better, it is just the timing of the release.
  
+##### Other libraries
+- **Vue-Router**: Multi page app.
+- **Bootstrap**: css framework.
+- **Pinia**: State Management.
+- **SignalR**: Real-time communication with the backend.
+- **axios**: Making HTTP requests.
+
+
 ### How to try the system
 Ensure latest version of docker desktop is installed and run docker compose commands:
 
 `docker-compose up -d`
 
+- access the frontend on http://localhost:12346/
+- access backend swagger API page on http://localhost:12345/
+- access RabbitMQ management page on http://localhost:15672/#/
+    - user: guest, password: guest
+
+The apps have some basic logging which can be accessed on docker logs.
