@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using RabbitMQ.Client;
 using server_a.Helpers;
 using server_a.HostedService;
+using server_a.RealTime;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,11 +20,13 @@ builder.Services.AddCors(option =>{
     option.AddDefaultPolicy(policyBuilder => {
         policyBuilder.WithOrigins("http://localhost:5173", "http://localhost:12346")
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 
 });
 
+builder.Services.AddSignalR();
 
 builder.Services.AddHostedService<OrderStatusUpdater>();
 builder.Services.AddSingleton(MqConnectionCreator.CreateMqConnection(builder.Configuration));
@@ -42,6 +45,7 @@ app.UseCors();
 
 app.MapControllers();
 app.MapSwagger();
+app.MapHub<OrderStatusHub>("/v1/orderStatus");
 
 app.Run();
 

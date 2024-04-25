@@ -1,14 +1,16 @@
 using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.SignalR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using server_a.ApiModels;
 using server_a.Helpers;
+using server_a.RealTime;
 
 namespace server_a.HostedService;
 
 public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, IConnection mqConnection,
-            OrdersCollection orders) : IHostedService
+            OrdersCollection orders, IHubContext<OrderStatusHub> rtHubContext) : IHostedService
 {
     private IModel? _mqChannel;
     public Task StartAsync(CancellationToken cancellationToken)
@@ -38,6 +40,7 @@ public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, IConnection 
         if (existingOrder != null)
         {
             existingOrder.Status = order.Status;
+            rtHubContext.Clients.All.SendAsync("OrderStatusUpdated");
         }
     }
 

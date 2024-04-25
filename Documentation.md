@@ -32,6 +32,7 @@ Here is diagram describing the overall architecture:
 - Nice and responsive frontend UI with Bootstrap
 - Loading indicator (frontend)
 - Action notifications (frontend)
+- RTC communication (server a - frontend) (SignalR library was used, which uses WebSocket by default)
 
 
 ### Technology Stack

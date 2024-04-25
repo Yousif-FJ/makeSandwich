@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import { useOrdersStore } from '../stores/orders';
 import { onMounted } from 'vue';
+import listenForOrderUpdate from '../helpers/listenForOrderUpdate';
 
 const ordersStore = useOrdersStore();
 
 onMounted(async () => {
-  await ordersStore.fetchOrders();
+    await ordersStore.fetchOrders();
+    listenForOrderUpdate();
 })
 
 </script>

@@ -48,7 +48,7 @@ public class OrderProcessor(ILogger<OrderProcessor> logger, IConnection mqConnec
             _mqChannel!.BasicAck(ea.DeliveryTag, false);            
 
 
-            Task.Delay(10000).GetAwaiter().GetResult();
+            Task.Delay(5000).GetAwaiter().GetResult();
 
             order.Status = StatusEnum.Ready;
             SendOrderToOrderStatusQueue(order);
