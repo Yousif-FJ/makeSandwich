@@ -14,6 +14,11 @@ export default function listenForOrderUpdate(){
         console.log("Connected to RTC hub!");
     });
     
+    connection.onclose(() => {
+        notificationStore.showNotification("Disconnected from RTC hub!", "error");
+        console.log("Disconnected from RTC hub!");
+    });
+    
     connection.on("OrderStatusUpdated", () => {
         console.log("Order signal update");
         orderStore.fetchOrders();

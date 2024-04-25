@@ -12,6 +12,8 @@ onMounted(async () => {
 
 </script>
 <template>
+    <h3>Order status</h3>
+    <p>Status updates in automatically in real-time</p>
     <div class="row">
         <div v-for="order in ordersStore.orders" :key="order.id" class="col-sm-3 ">
             <div class="card">
@@ -23,5 +25,4 @@ onMounted(async () => {
             </div>
         </div>
     </div>
-    <button class="btn btn-info mt-2" @click="ordersStore.fetchOrders()">refresh</button>
 </template>

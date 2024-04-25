@@ -30,6 +30,7 @@ Here is diagram describing the overall architecture:
 ### Additional Features
 
 - Nice and responsive frontend UI with Bootstrap
+- Production grade frontend Dockerfile (with Nginx)
 - Loading indicator (frontend)
 - Action notifications (frontend)
 - RTC communication (server a - frontend) (SignalR library was used, which uses WebSocket by default)
