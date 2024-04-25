@@ -7,6 +7,7 @@ export default function listenForOrderUpdate(){
     const notificationStore = useNotificationStore();
     const connection = new signalR.HubConnectionBuilder()
         .withUrl("http://localhost:12345/v1/orderStatus")
+        .withAutomaticReconnect()
         .build();
     
     connection.start().then(() => {
