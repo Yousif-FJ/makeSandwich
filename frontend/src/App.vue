@@ -3,6 +3,9 @@ import { RouterLink, RouterView } from 'vue-router'
 import NotificationComp from './components/NotificationComp.vue';
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
+import { useAuthStore } from './stores/auth';
+
+const authStore = useAuthStore();
 
 </script>
 
@@ -27,12 +30,16 @@ import "bootstrap"
               <RouterLink class="nav-link" to="/about">About</RouterLink>
             </li>
           </ul>
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <RouterLink v-if="!authStore.isLogged" class="nav-link" to="/login">Login</RouterLink>
+            <a v-if="authStore.isLogged" href="#" class="nav-link" @click="authStore.logout">Logout</a>
+          </ul>
         </div>
       </div>
     </nav>
   </header>
   <NotificationComp></NotificationComp>
-  <main class ="container-fluid mt-1">
+  <main class="container-fluid mt-1">
     <RouterView />
   </main>
 </template>
