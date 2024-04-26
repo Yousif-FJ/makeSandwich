@@ -85,18 +85,18 @@ We go over each component in the system:
 Acts as the main server in our system which server the API. 
 
 Here some things to note about this server:
-- The app entry point is on program.cs
-- The app is using dependency injection where the services are being registers in program.cs
-- The Request pipeline is also configured in program.cs  
-- The app use controller attribute routing: 
+- The app **entry point** is on program.cs
+- The app is using **dependency injection** where the services are being registers in program.cs
+- The **Request pipeline** is also configured in program.cs  
+- The app use controller attribute **routing**: 
     - Controller are named API in the code
     - The routes are defined as attributes on each endpoint in the APIs
-- The is hosting Swagger UI on root directory
-- The app is hosting real time communication hub:
+- The app is hosting **Swagger UI** on root directory
+- The app is hosting **real time communication hub**:
     - SignalR is being used.
     - SignalR uses WebSocket by default and may fall back to other methods if web socket not available.
     - The purpose of real time communication is to notify the frontend about order status changes.
-- The app is hosting a "hosted service", things to note about dotnet hosted services:
+- The app is hosting a "**hosted service**", things to note about dotnet hosted services:
     - Hosted services are singleton objects that are held in the app host
     - Hosted services trigger start function on the application startup 
     - Hosted services trigger stop function on application shutdown
@@ -108,9 +108,9 @@ Here some things to note about this server:
 
 #### Server B
 Act as order processor and emulate making sandwiches.
-- The app entry point is on program.cs
-- The app is using dependency injection where the services are being registers in program.cs
-- The app is hosting a hosted service (more about that was mentioned on server A)
+- The app **entry point** is on program.cs
+- The app is using **dependency injection** where the services are being registers in program.cs
+- The app is hosting a **hosted service** (more about that was mentioned on server A)
 - The app is hosting `OrderProcessor` hosted service, which do the following:
     - Subscribe to orders from `orders` queue
     - Publish order received message on `orderStatusUpdates`
@@ -125,16 +125,16 @@ One important feature of the system is the dead letter queue. Server A could sen
 The frontend is following vue standard architecture. 
 
 Here are some things to note:
-- The app is using Pinia for state management 
-- The app uses axios to make requests from the state store.
-- The app is also using vue router to route to different views like Orders page.
-- The app is using "bootstrap" for css
-- The app has `notification` component and store, which do the following:
+- The app is using Pinia for **state management** 
+- The app uses axios to make **HTTP requests** from the state store.
+- The app is also using **vue router** to route to different views like Orders page.
+- The app is using "**bootstrap**" for **css**
+- The app has **`notification`** component and store, which do the following:
     - Show message to the user when successful requests are made.
     - Show red error message when request fail.
     - show loading indicator when waiting for response from the API
     - Note: best way to test this, is to shut down the main server and try to use the app 
-- The app using real-time communication:
+- The app using **real-time communication**:
     - The app is utilizing SignalR client library.  
     - The app connection to Hub when entering Orders page.
     - The app fetches the orders again when it receives order update signal.
