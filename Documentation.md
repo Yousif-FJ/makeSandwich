@@ -156,4 +156,5 @@ Here are some things to note:
 - Production grade frontend Dockerfile (with Nginx)
 - Loading indicator (frontend)
 - Action notifications (frontend)
+- CRUD sandwich (API only)
 - RTC communication (server a - frontend) (SignalR library was used, which uses WebSocket by default)
