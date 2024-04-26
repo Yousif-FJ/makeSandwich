@@ -12,6 +12,14 @@ public class UserApi(UserManager<IdentityUser> userManager,
  SignInManager<IdentityUser> signInManager) 
 : ControllerBase
 {
+    [HttpGet]
+    [Route("/v1/auth")]
+    [Authorize]
+    public IActionResult IsAuthorized()
+    {
+        return Ok();
+    }
+
     /// <summary>
     /// Create user
     /// </summary>

@@ -18,7 +18,7 @@ public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, IConnection 
         _mqChannel = mqConnection.CreateModel();
 
         _mqChannel.ExchangeDeclare("orderStatusUpdates", ExchangeType.Direct);
-        _mqChannel.QueueDeclare("orderStatusUpdates", true, true, false, null);
+        _mqChannel.QueueDeclare("orderStatusUpdates", true, false, false, null);
         _mqChannel.QueueBind("orderStatusUpdates", "orderStatusUpdates", "orderStatus");
 
 

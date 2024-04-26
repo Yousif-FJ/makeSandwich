@@ -69,6 +69,8 @@ app.UseSwaggerUI();
 
 app.UseCors();
 
+app.UseAuthorization();
+
 app.MapControllers();
 app.MapSwagger();
 app.MapHub<OrderStatusHub>("/v1/orderStatus");

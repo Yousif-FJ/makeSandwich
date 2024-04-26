@@ -20,7 +20,24 @@ export const useSandwichesStore = defineStore('Sandwiches', () => {
     }
   }
 
-  return { Sandwiches, fetchSandwiches }
+  async function addSandwich(sandwichName: string, breadType: string) : Promise<void> {
+    const notificationStore = useNotificationStore();
+    const axios = createHttpClient();
+    try{
+      await axios.post('/v1/sandwich', {
+        name: sandwichName,
+        breadType: breadType,
+      })
+      notificationStore.showNotification('Added sandwich successfully', 'success');
+      await fetchSandwiches();
+    }
+    catch(error){
+      console.log(error);      
+      notificationStore.showNotification('Failed to add sandwich', 'error');
+    }
+  }
+
+  return { Sandwiches, fetchSandwiches, addSandwich }
 });
 
 export type Sandwich = {
