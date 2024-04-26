@@ -107,6 +107,9 @@ Here some things to note about this server:
     - Subscribe to `orderStatusUpdates` Queue.
     - Update the state of orders
     - Publish real time update notification on the Real-time communication hub.
+- The app implement CRUD operation on Sandwich API:
+    - Write operation require login. 
+    - The sandwiches information is stored in memory collections.
 - The app is implementing authentication and authorization:
     - The auth system is using Microsoft Identity library 
     - The store users in-memory (although using a database is very easy but no time)
@@ -147,23 +150,22 @@ Here are some things to note:
     - The app fetches the orders again when it receives order update signal.
 - The app has auth implementation and integration with the backend
 
-### Patterns used
 
-**Health check for RabbitMQ (compose):** This ensures that RabbitMQ is running healthy before starting the other application, so that they don't crash while attempting to connect.
-
-**Dependency Injection (DI) (server a+b):** This pattern is used by default in asp.net where services are register in a central place. DI is applying "Inversion of control" principle which is part of the S.O.L.I.D principles. The main benefit of DI is that it provide a central place in which all parts of the system are defined which is useful if we need to do integration testing with different configuration or mock services instead of the actual implementation. 
-
-**State management Stores (frontend):** using Pinia. This pattern is very useful to ensure that component are only concerned with the actual data rather than state.
-
-**Dead letter Queue (server b):** A queue where bad messages are sent(messages that server b can't process). This is very important for real application, because bad letter could cripple a system.
+### Summary for base features
+- Docker Compose hosting/deployment 
+- Server to server communication with RabbitMQ
+- SPA app
+- API CRUD
 
 
-### Additional Features
-
+### Summary for Additional Features and Technologies
+- Health check for RabbitMQ (Compose) (ensure RabbitMQ is working before starting server A and B)
+- State Management Store with Pinia (frontend) 
+- Dead Letter Queue (server B)
 - Nice and responsive frontend UI with Bootstrap
 - Production grade frontend Dockerfile (with Nginx)
 - Loading indicator (frontend)
 - Action notifications (frontend)
-- Authentication
-- Create sandwich (Full CRUD API only because no time)
-- RTC communication (server a - frontend) (SignalR library was used, which uses WebSocket by default)
+- Login (Authentication)
+- Require authentication for Create sandwich (Full CRUD API only because no time)
+- RTC communication (server A - frontend) 
