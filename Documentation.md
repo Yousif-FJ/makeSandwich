@@ -32,7 +32,8 @@ Reasons for using the technology:
 - **Swashbuckle.AspNetCore**: ASP.NET library for swagger UI.
 - **RabbitMQ.Client**: Official RabbitMQ client.
 - **SignalR**: Built-in with ASP.NET, allow for easy real time communication using Websocket or other methods.
-
+- **Microsoft.AspNetCore.Identity.EntityFrameworkCore**: for Authentication and user store.
+- **Microsoft.EntityFrameworkCore.InMemory**: for in-memory database for identity
 
 
 #### Server B
@@ -69,6 +70,7 @@ Ensure latest version of docker desktop is installed and run docker compose comm
 
 - access the frontend on http://localhost:12346/
 - access backend swagger API page on http://localhost:12345/
+    - Email : admin@localhost, password: admin123
 - access RabbitMQ management page on http://localhost:15672/#/
     - user: guest, password: guest
 
@@ -105,6 +107,15 @@ Here some things to note about this server:
     - Subscribe to `orderStatusUpdates` Queue.
     - Update the state of orders
     - Publish real time update notification on the Real-time communication hub.
+- The app is implementing authentication and authorization:
+    - The auth system is using Microsoft Identity library 
+    - The store users in-memory (although using a database is very easy but no time)
+    - The authentication is using cookie authentication with session
+    - The auth can be tested in swagger as follow:
+        - Attempt to add sandwich -> error
+        - Login 
+        - Attempt to add sandwich -> success
+
 
 #### Server B
 Act as order processor and emulate making sandwiches.
@@ -156,5 +167,6 @@ Here are some things to note:
 - Production grade frontend Dockerfile (with Nginx)
 - Loading indicator (frontend)
 - Action notifications (frontend)
+- Authentication
 - CRUD sandwich (API only)
 - RTC communication (server a - frontend) (SignalR library was used, which uses WebSocket by default)
