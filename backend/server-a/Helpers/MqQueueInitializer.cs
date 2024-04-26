@@ -2,7 +2,7 @@ using RabbitMQ.Client;
 
 namespace server_a.Helpers;
 
-public static class MqChannelInitializer
+public static class MqQueueInitializer
 {
     public static void EnsureOrdersQueueCreated(this IConnection mqConnection)
     {

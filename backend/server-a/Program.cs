@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
-using RabbitMQ.Client;
 using server_a.Helpers;
 using server_a.HostedService;
 using server_a.RealTime;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// dependency injection, register services and functionality
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers().AddJsonOptions(opts =>
@@ -32,6 +32,8 @@ builder.Services.AddHostedService<OrderStatusUpdater>();
 builder.Services.AddSingleton(MqConnectionCreator.CreateMqConnection(builder.Configuration));
 
 var app = builder.Build();
+
+// middleware, configure the HTTP request pipeline
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>
