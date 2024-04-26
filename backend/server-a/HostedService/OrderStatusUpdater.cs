@@ -18,12 +18,12 @@ public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, IConnection 
         _mqChannel = mqConnection.CreateModel();
 
         _mqChannel.ExchangeDeclare("orderStatusUpdates", ExchangeType.Direct);
-        _mqChannel.QueueDeclare("orderStatusUpdates", false, false, false, null);
+        _mqChannel.QueueDeclare("orderStatusUpdates", true, true, false, null);
         _mqChannel.QueueBind("orderStatusUpdates", "orderStatusUpdates", "orderStatus");
 
 
         var consumer = new EventingBasicConsumer(_mqChannel);
-        _mqChannel.BasicConsume("orderStatusUpdates", true, consumer);
+        _mqChannel.BasicConsume("orderStatusUpdates", false, consumer);
         consumer.Received += OnOrderUpdateReceived;
 
         return Task.CompletedTask;
@@ -34,6 +34,7 @@ public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, IConnection 
         var body = ea.Body.ToArray();
         var receivedMessage = Encoding.UTF8.GetString(body);
         logger.LogInformation("Received message: {message}", receivedMessage);
+
         var order = JsonSerializer.Deserialize<Order>(receivedMessage)!;
 
         var existingOrder = orders.FirstOrDefault(o => o.Id == order.Id);
@@ -42,6 +43,7 @@ public class OrderStatusUpdater(ILogger<OrderStatusUpdater> logger, IConnection 
             existingOrder.Status = order.Status;
             rtHubContext.Clients.All.SendAsync("OrderStatusUpdated");
         }
+        _mqChannel!.BasicAck(ea.DeliveryTag, false); 
     }
 
 

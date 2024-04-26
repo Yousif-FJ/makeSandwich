@@ -10,21 +10,23 @@ public class OrderProcessor(ILogger<OrderProcessor> logger, IConnection mqConnec
     : IHostedService
 {
     private readonly ILogger<OrderProcessor> _logger = logger;
+    private readonly IConnection _mqConnection = mqConnection;
     private IModel? _mqChannel;
+
 
     public Task StartAsync(CancellationToken cancellationToken)
     {
-        _mqChannel = mqConnection.CreateModel();
-        _mqChannel.QueueDeclare("orders", false, false, false, null);
+        _mqChannel = _mqConnection.CreateModel();
+        _mqChannel.ExchangeDeclare("orders", ExchangeType.Direct);
+        _mqChannel.QueueDeclare("orders", true, false, false, null);
+        _mqChannel.QueueBind("orders", "orders", "order");
+
 
         var consumer = new EventingBasicConsumer(_mqChannel);
         consumer.Received += OnOrderReceived;
-
         _mqChannel.BasicConsume("orders", false, consumer);
-
-
         _mqChannel.ExchangeDeclare("orderStatusUpdates", ExchangeType.Direct);
-        _mqChannel.QueueDeclare("orderStatusUpdates", false, false, false, null);
+        _mqChannel.QueueDeclare("orderStatusUpdates", true, false, false, null);
         _mqChannel.QueueBind("orderStatusUpdates", "orderStatusUpdates", "orderStatus");
         
         return Task.CompletedTask;
@@ -42,10 +44,10 @@ public class OrderProcessor(ILogger<OrderProcessor> logger, IConnection mqConnec
             {
                 throw new Exception("Invalid order received.");
             }
+            _mqChannel!.BasicAck(ea.DeliveryTag, false); 
+
             order.Status = StatusEnum.Received;
-            
             SendOrderToOrderStatusQueue(order);
-            _mqChannel!.BasicAck(ea.DeliveryTag, false);            
 
 
             Task.Delay(5000).GetAwaiter().GetResult();
@@ -55,18 +57,23 @@ public class OrderProcessor(ILogger<OrderProcessor> logger, IConnection mqConnec
         }
         catch (Exception e)
         {
+            using var channel = _mqConnection.CreateModel();
             _logger.LogError(e, "Error processing order. Message was sent to dead letter queue.");
 
-            _mqChannel!.QueueDeclare("deadLetter", false, false, false, null);
-            _mqChannel!.BasicPublish("", "deadLetter", null, ea.Body);
-            _mqChannel!.BasicAck(ea.DeliveryTag, false);           
+            channel.QueueDeclare("deadLetter", true, false, false, null);
+            channel.BasicPublish("", "deadLetter", null, ea.Body);
+            channel.BasicAck(ea.DeliveryTag, false);           
         }
     }
 
     private void SendOrderToOrderStatusQueue(Order order)
     {
-        var statusMessage = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(order));
+        var orderText = JsonSerializer.Serialize(order);
+        var statusMessage = Encoding.UTF8.GetBytes(orderText);
+        _mqChannel!.ConfirmSelect();
         _mqChannel.BasicPublish("orderStatusUpdates", "orderStatus", null, statusMessage);
+        _mqChannel.WaitForConfirmsOrDie(TimeSpan.FromSeconds(5));
+        _logger.LogInformation("Sent order status. OrderId: {message}", orderText);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

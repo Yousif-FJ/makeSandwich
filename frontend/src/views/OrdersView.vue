@@ -6,7 +6,6 @@ import listenForOrderUpdate from '../helpers/listenForOrderUpdate';
 const ordersStore = useOrdersStore();
 
 onMounted(async () => {
-    await ordersStore.fetchOrders();
     listenForOrderUpdate();
 })
 

@@ -10,11 +10,11 @@ namespace server_a.Data.Models
     public enum StatusEnum
     {
 
-        Ordered,
-        InQueue,
-        Received,
-        Ready,
-        Failed
+        Ordered = 0,
+        InQueue = 1,
+        Received = 2,
+        Ready = 3,
+        Failed = 4
     }
 }
 

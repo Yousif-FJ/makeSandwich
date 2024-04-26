@@ -13,6 +13,7 @@ export default function listenForOrderUpdate(){
     connection.start().then(() => {
         notificationStore.showNotification("Connected to RTC hub!", "success");
         console.log("Connected to RTC hub!");
+        orderStore.fetchOrders();
     });
     
     connection.onclose(() => {
