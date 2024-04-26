@@ -22,7 +22,7 @@ Reasons for using the technology:
     - Support for Logging providers.
     - Dependency Injection pattern making applications easier to maintain. 
     - Support for OpenAPI specification documentation (swagger).
-    - Tooling for making setting up authentication and authorization.
+    - Tooling for setting up authentication and authorization.
 - Wide selection of community developed packages (just like NPM) like Rabbit MQ drivers, database drivers and so on.
 - It is worth noting that modern asp.net 8 is cross-platform, cloud native and open source framework.
 - Strongly types programming language offers the ability to catch error early.
@@ -69,8 +69,8 @@ Ensure latest version of docker desktop is installed and run docker compose comm
 `docker-compose up -d`
 
 - access the frontend on http://localhost:12346/
-- access backend swagger API page on http://localhost:12345/
     - Email : admin@localhost, password: admin123
+- access backend swagger API page on http://localhost:12345/
 - access RabbitMQ management page on http://localhost:15672/#/
     - user: guest, password: guest
 
@@ -111,10 +111,6 @@ Here some things to note about this server:
     - The auth system is using Microsoft Identity library 
     - The store users in-memory (although using a database is very easy but no time)
     - The authentication is using cookie authentication with session
-    - The auth can be tested in swagger as follow:
-        - Attempt to add sandwich -> error
-        - Login 
-        - Attempt to add sandwich -> success
 
 
 #### Server B
@@ -149,6 +145,7 @@ Here are some things to note:
     - The app is utilizing SignalR client library.  
     - The app connection to Hub when entering Orders page.
     - The app fetches the orders again when it receives order update signal.
+- The app has auth implementation and integration with the backend
 
 ### Patterns used
 
@@ -168,5 +165,5 @@ Here are some things to note:
 - Loading indicator (frontend)
 - Action notifications (frontend)
 - Authentication
-- CRUD sandwich (API only)
+- Create sandwich (Full CRUD API only because no time)
 - RTC communication (server a - frontend) (SignalR library was used, which uses WebSocket by default)
