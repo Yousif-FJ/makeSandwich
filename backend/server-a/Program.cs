@@ -15,6 +15,7 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
     });
     
 builder.Services.AddSingleton<OrdersCollection>();
+builder.Services.AddSingleton<SandwichCollection>();
 
 builder.Services.AddCors(option =>{
     option.AddDefaultPolicy(policyBuilder => {

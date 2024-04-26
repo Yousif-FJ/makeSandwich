@@ -11,6 +11,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using server_a.ApiModels;
+using server_a.Helpers;
 
 namespace server_a.Api
 {
@@ -18,24 +19,24 @@ namespace server_a.Api
     /// 
     /// </summary>
     [ApiController]
-    public class SandwichApi : ControllerBase
+    public class SandwichApi(SandwichCollection sandwichCollection) : ControllerBase
     {
+        private readonly SandwichCollection _sandwichCollection = sandwichCollection;
+
         /// <summary>
         /// Add a new sandwich to the store. Needs an API key.
         /// </summary>
-
-        /// <param name="body">Sandwich object that needs to be added to the store</param>
-        /// <response code="405">Invalid input</response>
+        /// <param name="sandwich">Sandwich object that needs to be added to the store</param>
+        /// <response code="400">Invalid input</response>
         [HttpPost]
         [Route("/v1/sandwich")]
         //Require Auth
-        public virtual IActionResult AddSandwich([FromBody] Sandwich body)
+        public virtual IActionResult AddSandwich([FromBody] Sandwich sandwich)
         {
-            //TODO: Uncomment the next line to return response 405 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(405);
+            sandwich.Id = _sandwichCollection.Count;
+            _sandwichCollection.Add(sandwich);
 
-
-            throw new NotImplementedException();
+            return Ok(sandwich);
         }
 
         /// <summary>
@@ -43,22 +44,21 @@ namespace server_a.Api
         /// </summary>
 
         /// <param name="sandwichId">Sandwich id to delete</param>
-        /// <param name="apiKey"></param>
-        /// <response code="400">Invalid ID supplied</response>
+        /// <response code="400">Invalid input</response>
         /// <response code="404">Sandwich not found</response>
         [HttpDelete]
         [Route("/v1/sandwich/{sandwichId}")]
         //require auth
-        public virtual IActionResult DeleteSandwich([FromRoute][Required] long? sandwichId, [FromHeader] string apiKey)
+        public IActionResult DeleteSandwich([FromRoute][Required] long? sandwichId)
         {
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400);
+            var sandwich = _sandwichCollection.FirstOrDefault(s => s.Id == sandwichId);
+            if (sandwich == null)
+            {
+                return NotFound();
+            }
 
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404);
-
-
-            throw new NotImplementedException();
+            _sandwichCollection.Remove(sandwich);
+            return Ok();
         }
 
         /// <summary>
@@ -67,24 +67,21 @@ namespace server_a.Api
         /// <remarks>Returns a single sandwich</remarks>
         /// <param name="sandwichId">ID of sandwich to return</param>
         /// <response code="200">successful operation</response>
-        /// <response code="400">Invalid ID supplied</response>
+        /// <response code="400">Invalid input</response>
         /// <response code="404">Sandwich not found</response>
         [HttpGet]
         [Route("/v1/sandwich/{sandwichId}")]
         //Require Auth
         [ProducesResponseType(statusCode: 200, type: typeof(Sandwich))]
-        public virtual IActionResult GetSandwichById([FromRoute][Required] long? sandwichId)
+        public IActionResult GetSandwichById([FromRoute][Required] long? sandwichId)
         {
-            //TODO: Uncomment the next line to return response 200 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(200, default(Sandwich));
+            var sandwich = _sandwichCollection.FirstOrDefault(s => s.Id == sandwichId);
+            if (sandwich == null)
+            {
+                return NotFound();
+            }
 
-            //TODO: Uncomment the next line to return response 400 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(400);
-
-            //TODO: Uncomment the next line to return response 404 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(404);
-
-            throw new NotImplementedException();
+            return Ok(sandwich);
         }
 
         /// <summary>
@@ -94,13 +91,9 @@ namespace server_a.Api
         [HttpGet]
         [Route("/v1/sandwich")]
         [ProducesResponseType(statusCode: 200, type: typeof(List<Sandwich>))]
-        public virtual IActionResult GetSandwiches()
+        public IActionResult GetSandwiches()
         {
-            var result = new List<Sandwich> {
-                new() { Id = 1, Name = "Ham and cheese", BreadType = BreadTypeEnum.Wheat},
-                new() { Id = 2, Name = "Vegetarian", BreadType = BreadTypeEnum.Rye }
-            };
-            return Ok(result);
+            return Ok(_sandwichCollection);
         }
 
         /// <summary>
@@ -108,18 +101,26 @@ namespace server_a.Api
         /// </summary>
 
         /// <param name="sandwichId">ID of sandwich to return</param>
-        /// <param name="body">Sandwich object that needs to be added to the store</param>
-        /// <response code="405">Invalid input</response>
-        [HttpPost]
+        /// <param name="newSandwich">Sandwich object that needs to be added to the store</param>
+        /// <response code="400">Invalid input</response>
+        /// <response code="404">Sandwich not found</response>
+        [HttpPut]
         [Route("/v1/sandwich/{sandwichId}")]
         //Require Auth
-        public virtual IActionResult UpdateSandwich([FromRoute][Required] long? sandwichId, [FromBody] Sandwich body)
+        public virtual IActionResult UpdateSandwich([FromRoute][Required] long? sandwichId,
+         [FromBody] Sandwich newSandwich)
         {
-            //TODO: Uncomment the next line to return response 405 or use other options such as return this.NotFound(), return this.BadRequest(..), ...
-            // return StatusCode(405);
+            var sandwich = _sandwichCollection.FirstOrDefault(s => s.Id == sandwichId);
+            if (sandwich == null)
+            {
+                return NotFound();
+            }
+            var id = sandwich.Id;
+            newSandwich.Id = id;
+            _sandwichCollection.Remove(sandwich);
+            _sandwichCollection.Add(newSandwich);
 
-
-            throw new NotImplementedException();
+            return Ok(newSandwich);
         }
     }
 }
