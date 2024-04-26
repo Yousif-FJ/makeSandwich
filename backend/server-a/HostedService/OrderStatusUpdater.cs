@@ -3,8 +3,8 @@ using System.Text.Json;
 using Microsoft.AspNetCore.SignalR;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using server_a.ApiModels;
-using server_a.Helpers;
+using server_a.Data.Collections;
+using server_a.Data.Models;
 using server_a.RealTime;
 
 namespace server_a.HostedService;

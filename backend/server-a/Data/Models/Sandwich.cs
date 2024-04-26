@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace server_a.ApiModels
+namespace server_a.Data.Models
 {
     public partial class Sandwich
     {
@@ -10,7 +10,8 @@ namespace server_a.ApiModels
         public required string Name { get; set; }
 
 
-        public List<Topping>? Toppings { get; set; } 
+        public List<Topping>? Toppings { get; set; }
+
 
 
         [Required]

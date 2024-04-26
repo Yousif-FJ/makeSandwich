@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace server_a.ApiModels
+namespace server_a.Data.Models
 {
     public partial class Topping
     {

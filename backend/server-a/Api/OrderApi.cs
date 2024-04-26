@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
-using server_a.ApiModels;
 using RabbitMQ.Client;
 using System.Text.Json;
 using System.Text;
-using server_a.Helpers;
+using server_a.Data.Models;
+using server_a.Data.Collections;
 
 namespace server_a.Api
 {

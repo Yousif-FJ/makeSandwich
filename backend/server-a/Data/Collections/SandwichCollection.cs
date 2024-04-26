@@ -1,6 +1,6 @@
-using server_a.ApiModels;
+using server_a.Data.Models;
 
-namespace server_a.Helpers;
+namespace server_a.Data.Collections;
 public class SandwichCollection : List<Sandwich>
 {
     public SandwichCollection()
@@ -17,7 +17,8 @@ public class SandwichCollection : List<Sandwich>
     {
         AddRange(MockData());
     }
-    private static IList<Sandwich> MockData(){
+    private static IList<Sandwich> MockData()
+    {
         return [
                 new() { Id = 0, Name = "Ham and cheese", BreadType = BreadTypeEnum.Wheat},
                 new() { Id = 1, Name = "Vegetarian", BreadType = BreadTypeEnum.Rye },
