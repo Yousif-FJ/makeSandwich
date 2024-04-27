@@ -33,7 +33,7 @@ Reasons for using the technology:
 - **RabbitMQ.Client**: Official RabbitMQ client.
 - **SignalR**: Built-in with ASP.NET, allow for easy real time communication using Websocket or other methods.
 - **Microsoft.AspNetCore.Identity.EntityFrameworkCore**: for Authentication and user store.
-- **Microsoft.EntityFrameworkCore.InMemory**: for in-memory database for identity
+- **Microsoft.EntityFrameworkCore.SqlServer**: Database ORM for MS SQL Server.
 
 
 #### Server B
@@ -68,7 +68,7 @@ The app use MS SQL server database. Other databases could be used but this one w
 The database is only used for storing users in the system.
 
 ### How to try the system
-Ensure latest version of docker desktop is installed and run docker compose commands:
+Ensure latest version of docker desktop is installed and running then run docker compose commands:
 
 `docker-compose up -d`
 
@@ -77,6 +77,8 @@ Ensure latest version of docker desktop is installed and run docker compose comm
 - access backend swagger API page on http://localhost:12345/
 - access RabbitMQ management page on http://localhost:15672/#/
     - user: guest, password: guest
+- access SQL server using Server Management Studio on localhost (default port 1433)
+    - user: sa, password: localHostPassword123
 
 The apps have some basic logging which can be accessed on docker logs.
 
