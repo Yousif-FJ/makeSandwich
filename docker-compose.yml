@@ -41,6 +41,8 @@ services:
     networks:
       - backend
     depends_on:
+      mssql:
+        condition: service_started
       rabbitmq:
         condition: service_healthy
 
