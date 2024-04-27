@@ -63,8 +63,9 @@ Reasons for using the technology::
 - **axios**: Making HTTP requests.
 
 #### Database
-The app use MS SQL server database
+The app use MS SQL server database. Other databases could be used but this one was chosen because the developer is familiar with it.
 
+The database is only used for storing users in the system.
 
 ### How to try the system
 Ensure latest version of docker desktop is installed and run docker compose commands:

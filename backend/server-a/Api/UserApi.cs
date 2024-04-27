@@ -12,6 +12,10 @@ public class UserApi(UserManager<IdentityUser> userManager,
  SignInManager<IdentityUser> signInManager) 
 : ControllerBase
 {
+    /// <summary>
+    /// Check if user is authorized
+    /// </summary>
+    /// <returns></returns>
     [HttpGet]
     [Route("/v1/auth")]
     [Authorize]

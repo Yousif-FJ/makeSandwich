@@ -42,7 +42,6 @@ namespace server_a.Api
         /// <summary>
         /// Send a bad order to the queue. This is used to test dead letter queue functionality.
         /// </summary>
-        /// <param name="order">place an order for a sandwich</param>
         /// <response code="200">successful operation</response>
         [HttpPost]
         [Route("/v1/badOrder")]

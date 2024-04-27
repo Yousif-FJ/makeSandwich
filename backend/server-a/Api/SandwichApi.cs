@@ -12,7 +12,7 @@ namespace server_a.Api
         private readonly SandwichCollection _sandwichCollection = sandwichCollection;
 
         /// <summary>
-        /// Add a new sandwich to the store. Needs an API key.
+        /// Add a new sandwich to the store. Require Login
         /// </summary>
         /// <param name="sandwich">Sandwich object that needs to be added to the store</param>
         /// <response code="400">Invalid input</response>
@@ -28,9 +28,8 @@ namespace server_a.Api
         }
 
         /// <summary>
-        /// Deletes a sandwich
+        /// Deletes a sandwich. Require Login
         /// </summary>
-
         /// <param name="sandwichId">Sandwich id to delete</param>
         /// <response code="400">Invalid input</response>
         /// <response code="404">Sandwich not found</response>
@@ -84,9 +83,8 @@ namespace server_a.Api
         }
 
         /// <summary>
-        /// Updates a sandwich in the store with JSON in body
+        /// Updates a sandwich in the store with JSON in body. Require Login
         /// </summary>
-
         /// <param name="sandwichId">ID of sandwich to return</param>
         /// <param name="newSandwich">Sandwich object that needs to be added to the store</param>
         /// <response code="400">Invalid input</response>
