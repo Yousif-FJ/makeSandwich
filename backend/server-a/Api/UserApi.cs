@@ -38,8 +38,8 @@ public class UserApi(UserManager<IdentityUser> userManager,
             return BadRequest("invalid email");
         }
 
-        var user = new IdentityUser(body.Username);
-        await userStore.SetUserNameAsync(user, email, CancellationToken.None);
+        var user = new IdentityUser();
+        await userStore.SetUserNameAsync(user, body.Username, CancellationToken.None);
         await emailStore.SetEmailAsync(user, email, CancellationToken.None);
         var result = await userManager.CreateAsync(user, body.Password);
 

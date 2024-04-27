@@ -62,6 +62,9 @@ Reasons for using the technology::
 - **SignalR**: Real-time communication with the backend.
 - **axios**: Making HTTP requests.
 
+#### Database
+The app use MS SQL server database
+
 
 ### How to try the system
 Ensure latest version of docker desktop is installed and run docker compose commands:
@@ -112,7 +115,7 @@ Here some things to note about this server:
     - The sandwiches information is stored in memory collections.
 - The app is implementing authentication and authorization:
     - The auth system is using Microsoft Identity library 
-    - The store users in-memory (although using a database is very easy but no time)
+    - The store users in MS SQL Server database
     - The authentication is using cookie authentication with session
 
 

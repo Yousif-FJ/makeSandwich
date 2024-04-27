@@ -20,7 +20,7 @@ builder.Services.AddControllers().AddJsonOptions(opts =>
     
 
 builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseInMemoryDatabase("AppDb"));
+    options => options.UseSqlServer(DbStringCreator.CreateDbString(builder.Configuration)));
 
 builder.Services.AddSingleton<OrdersCollection>();
 builder.Services.AddSingleton<SandwichCollection>();

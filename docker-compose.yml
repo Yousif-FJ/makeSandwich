@@ -24,6 +24,9 @@ services:
     networks:
       - backend
     environment:
+      - mssqlHost=mssql
+      # This should use Docker secrets in production
+      - mssqlPassword=${MSSQL_SA_PASSWORD}
       - RabbitMQ_Host=rabbitmq
     depends_on:
       rabbitmq:
@@ -41,6 +44,17 @@ services:
       rabbitmq:
         condition: service_healthy
 
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    networks:
+      - backend
+    volumes:
+      - sqlvolume:/var/opt/mssql
 
   frontend:
     build:
@@ -52,6 +66,8 @@ services:
     depends_on:
       - server-a
 
+volumes:
+  sqlvolume:
 
 networks:
   backend:
