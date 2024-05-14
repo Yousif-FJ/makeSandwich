@@ -1,5 +1,5 @@
 ### Introduction
-Make a sandwich is a system with a frontend and a distributed backend. The system enables end users to order sandwiches and track the state of their orders.
+Make a sandwich is a system with a frontend and a distributed backend. The system enables end users to order sandwiches and track the state of their orders. Originally made for Uni project.
 
 ### Summary for base features
 - Docker Compose hosting/deployment 
