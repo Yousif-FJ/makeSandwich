@@ -36,66 +36,6 @@ Ensure latest version of docker desktop is installed and running then run docker
 
 The apps have some basic logging which can be accessed on docker logs.
 
-
-### Technology Stack
-#### Server A
-ASP.NET (Core) 8 with C#.
-
-Using Controller Web API template.
-
-Reasons for using the technology:
-- The developer is familiar with the framework.
-- Great performance, C# is one of the best performing web frameworks. 
-- Out-of-the-box support for many modern web application patterns. for example:
-    - Support for Logging providers.
-    - Dependency Injection pattern making applications easier to maintain. 
-    - Support for OpenAPI specification documentation (swagger).
-    - Tooling for setting up authentication and authorization.
-- Wide selection of community developed packages (just like NPM) like Rabbit MQ drivers, database drivers and so on.
-- It is worth noting that modern asp.net 8 is cross-platform, cloud native and open source framework.
-- Strongly types programming language offers the ability to catch error early.
-
-##### Other libraries
-- **AspNetCore.OpenApi**: Libraries that facilitate work with open API specs.
-- **Swashbuckle.AspNetCore**: ASP.NET library for swagger UI.
-- **RabbitMQ.Client**: Official RabbitMQ client.
-- **SignalR**: Built-in with ASP.NET, allow for easy real time communication using Websocket or other methods.
-- **Microsoft.AspNetCore.Identity.EntityFrameworkCore**: for Authentication and user store.
-- **Microsoft.EntityFrameworkCore.SqlServer**: Database ORM for MS SQL Server.
-
-
-#### Server B
-Dotnet 8 service worker C#.
-
-Using service worker template. Which is like a console app but with IHost for long running service which includes tooling for DI and other services like configuration, logging, etc..
-
-Reasons for using the technology:
-- Same reasons as server A
-
-##### Other libraries
-- **RabbitMQ.Client**: Official RabbitMQ client.
-
-
-#### Frontend
-vue.Js with TS for the frontend. 
-
-Reasons for using the technology::
-- Light-weight and good performance.
-- More flexible features with native extensions.
- 
-##### Other libraries
-- **Vue-Router**: Multi page app.
-- **Bootstrap**: css framework.
-- **Pinia**: State Management.
-- **SignalR**: Real-time communication with the backend.
-- **axios**: Making HTTP requests.
-
-#### Database
-The app use MS SQL server database. Other databases could be used but this one was chosen because the developer is familiar with it.
-
-The database is only used for storing users in the system.
-
-
 ### Architecture
 Here is diagram describing the overall architecture:
 ![sandwich maker diagram](other-files/sandwich-maker-diagram.png)
@@ -168,3 +108,62 @@ Here are some things to note:
     - The app connection to Hub when entering Orders page.
     - The app fetches the orders again when it receives order update signal.
 - The app has auth implementation and integration with the backend
+
+
+### Technology Stack
+#### Server A
+ASP.NET (Core) 8 with C#.
+
+Using Controller Web API template.
+
+Reasons for using the technology:
+- The developer is familiar with the framework.
+- Great performance, C# is one of the best performing web frameworks. 
+- Out-of-the-box support for many modern web application patterns. for example:
+    - Support for Logging providers.
+    - Dependency Injection pattern making applications easier to maintain. 
+    - Support for OpenAPI specification documentation (swagger).
+    - Tooling for setting up authentication and authorization.
+- Wide selection of community developed packages (just like NPM) like Rabbit MQ drivers, database drivers and so on.
+- It is worth noting that modern asp.net 8 is cross-platform, cloud native and open source framework.
+- Strongly types programming language offers the ability to catch error early.
+
+##### Other libraries
+- **AspNetCore.OpenApi**: Libraries that facilitate work with open API specs.
+- **Swashbuckle.AspNetCore**: ASP.NET library for swagger UI.
+- **RabbitMQ.Client**: Official RabbitMQ client.
+- **SignalR**: Built-in with ASP.NET, allow for easy real time communication using Websocket or other methods.
+- **Microsoft.AspNetCore.Identity.EntityFrameworkCore**: for Authentication and user store.
+- **Microsoft.EntityFrameworkCore.SqlServer**: Database ORM for MS SQL Server.
+
+
+#### Server B
+Dotnet 8 service worker C#.
+
+Using service worker template. Which is like a console app but with IHost for long running service which includes tooling for DI and other services like configuration, logging, etc..
+
+Reasons for using the technology:
+- Same reasons as server A
+
+##### Other libraries
+- **RabbitMQ.Client**: Official RabbitMQ client.
+
+
+#### Frontend
+vue.Js with TS for the frontend. 
+
+Reasons for using the technology::
+- Light-weight and good performance.
+- More flexible features with native extensions.
+ 
+##### Other libraries
+- **Vue-Router**: Multi page app.
+- **Bootstrap**: css framework.
+- **Pinia**: State Management.
+- **SignalR**: Real-time communication with the backend.
+- **axios**: Making HTTP requests.
+
+#### Database
+The app use MS SQL server database. Other databases could be used but this one was chosen because the developer is familiar with it.
+
+The database is only used for storing users in the system.
