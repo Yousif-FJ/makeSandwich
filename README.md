@@ -1,6 +1,42 @@
 ### Introduction
 Make a sandwich is a system with a frontend and a distributed backend. The system enables end users to order sandwiches and track the state of their orders.
 
+### Summary for base features
+- Docker Compose hosting/deployment 
+- Server to server communication with RabbitMQ
+- SPA app
+- API CRUD
+
+
+### Summary for Additional Features and Technologies
+- Health check for RabbitMQ (Compose) (ensure RabbitMQ is working before starting server A and B)
+- State Management Store with Pinia (frontend) 
+- Dead Letter Queue (server B)
+- Nice and responsive frontend UI with Bootstrap
+- Production grade frontend Dockerfile (with Nginx)
+- Loading indicator (frontend)
+- Action notifications (frontend)
+- Login (Authentication)
+- Require authentication for Create sandwich (Full CRUD API only because no time)
+- RTC communication (server A - frontend) 
+
+
+### How to try the system
+Ensure latest version of docker desktop is installed and running then run docker compose commands:
+
+`docker-compose up -d`
+
+- access the frontend on http://localhost:12346/
+    - Email : admin@localhost, password: admin123
+- access backend swagger API page on http://localhost:12345/
+- access RabbitMQ management page on http://localhost:15672/#/
+    - user: guest, password: guest
+- access SQL server using Server Management Studio on localhost (default port 1433)
+    - user: sa, password: localHostPassword123
+
+The apps have some basic logging which can be accessed on docker logs.
+
+
 ### Technology Stack
 #### Server A
 ASP.NET (Core) 8 with C#.
@@ -58,21 +94,6 @@ Reasons for using the technology::
 The app use MS SQL server database. Other databases could be used but this one was chosen because the developer is familiar with it.
 
 The database is only used for storing users in the system.
-
-### How to try the system
-Ensure latest version of docker desktop is installed and running then run docker compose commands:
-
-`docker-compose up -d`
-
-- access the frontend on http://localhost:12346/
-    - Email : admin@localhost, password: admin123
-- access backend swagger API page on http://localhost:12345/
-- access RabbitMQ management page on http://localhost:15672/#/
-    - user: guest, password: guest
-- access SQL server using Server Management Studio on localhost (default port 1433)
-    - user: sa, password: localHostPassword123
-
-The apps have some basic logging which can be accessed on docker logs.
 
 
 ### Architecture
@@ -147,23 +168,3 @@ Here are some things to note:
     - The app connection to Hub when entering Orders page.
     - The app fetches the orders again when it receives order update signal.
 - The app has auth implementation and integration with the backend
-
-
-### Summary for base features
-- Docker Compose hosting/deployment 
-- Server to server communication with RabbitMQ
-- SPA app
-- API CRUD
-
-
-### Summary for Additional Features and Technologies
-- Health check for RabbitMQ (Compose) (ensure RabbitMQ is working before starting server A and B)
-- State Management Store with Pinia (frontend) 
-- Dead Letter Queue (server B)
-- Nice and responsive frontend UI with Bootstrap
-- Production grade frontend Dockerfile (with Nginx)
-- Loading indicator (frontend)
-- Action notifications (frontend)
-- Login (Authentication)
-- Require authentication for Create sandwich (Full CRUD API only because no time)
-- RTC communication (server A - frontend) 
