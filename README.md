@@ -1,88 +1,169 @@
-# COMP.CS.510 Web Development 2 - Group project work repository
+### Introduction
+Make a sandwich is a system with a frontend and a distributed backend. The system enables end users to order sandwiches and track the state of their orders.
 
-Hello WebDevelopers!
+### Technology Stack
+#### Server A
+ASP.NET (Core) 8 with C#.
 
-This repository is the home for all of your group's code and documentation during this project.  
+Using Controller Web API template.
 
-## Documentation of the system and group's work
+Reasons for using the technology:
+- The developer is familiar with the framework.
+- Great performance, C# is one of the best performing web frameworks. 
+- Out-of-the-box support for many modern web application patterns. for example:
+    - Support for Logging providers.
+    - Dependency Injection pattern making applications easier to maintain. 
+    - Support for OpenAPI specification documentation (swagger).
+    - Tooling for setting up authentication and authorization.
+- Wide selection of community developed packages (just like NPM) like Rabbit MQ drivers, database drivers and so on.
+- It is worth noting that modern asp.net 8 is cross-platform, cloud native and open source framework.
+- Strongly types programming language offers the ability to catch error early.
 
-For the final submission, all group documentation must be provided in a single PDF file in the root directory of this repository. Do not add any documentation into the course_documentation folder, as that can be used by course personnel to add new content without causing merge issues.
+##### Other libraries
+- **AspNetCore.OpenApi**: Libraries that facilitate work with open API specs.
+- **Swashbuckle.AspNetCore**: ASP.NET library for swagger UI.
+- **RabbitMQ.Client**: Official RabbitMQ client.
+- **SignalR**: Built-in with ASP.NET, allow for easy real time communication using Websocket or other methods.
+- **Microsoft.AspNetCore.Identity.EntityFrameworkCore**: for Authentication and user store.
+- **Microsoft.EntityFrameworkCore.SqlServer**: Database ORM for MS SQL Server.
 
-You may use Markdown (.md) or any other documentation method to keep track of documentation during the project, as long as it can be accessed from the repository.
 
-### Required documentation
+#### Server B
+Dotnet 8 service worker C#.
 
-The documentation required includes the project plan, architectural description of the system, the technologies used, the progress of the group's work, as well as what the group's members learned during this project. Groups also must document where the components of their system are placed in the repository, and how the course personnel can deploy the group's system on their own computers when testing it.
+Using service worker template. Which is like a console app but with IHost for long running service which includes tooling for DI and other services like configuration, logging, etc..
 
-Groups can of course add any extra documentation they feel is useful, and if course personnel finds the documentation useful and well-written, this extra documentation will affect the points positively.
+Reasons for using the technology:
+- Same reasons as server A
 
-### Project plan
+##### Other libraries
+- **RabbitMQ.Client**: Official RabbitMQ client.
 
-The following subsection tells what should be documented under _Project plan_ section.
 
-#### Course project group information
+#### Frontend
+vue.Js with TS for the frontend. 
 
-Start the documentation with identifying information:
-- The name, student number, and TUNI email for each group member
-- Group name
-- GitLab repo URL
+Reasons for using the technology::
+- Light-weight and good performance.
+- More flexible features with native extensions.
+ 
+##### Other libraries
+- **Vue-Router**: Multi page app.
+- **Bootstrap**: css framework.
+- **Pinia**: State Management.
+- **SignalR**: Real-time communication with the backend.
+- **axios**: Making HTTP requests.
 
-#### Working during the project
+#### Database
+The app use MS SQL server database. Other databases could be used but this one was chosen because the developer is familiar with it.
 
-The initial timetable for the research, design and implementation of the architecture
+The database is only used for storing users in the system.
 
-Which group member(s) will be responsible for what
+### How to try the system
+Ensure latest version of docker desktop is installed and running then run docker compose commands:
 
-How much time each group member promises to group project work per week. Note down each member's promise for committed hours for this project
+`docker-compose up -d`
 
-#### GitLab Issue Boards
+- access the frontend on http://localhost:12346/
+    - Email : admin@localhost, password: admin123
+- access backend swagger API page on http://localhost:12345/
+- access RabbitMQ management page on http://localhost:15672/#/
+    - user: guest, password: guest
+- access SQL server using Server Management Studio on localhost (default port 1433)
+    - user: sa, password: localHostPassword123
 
-**It is recommended that your group uses GitLab’s Issue Board for assigning tasks to members.** Issue Boards offer Kanban-like project management in an easily accessible form.
+The apps have some basic logging which can be accessed on docker logs.
 
-In GitLab, you can have easy, lightweight project management by using the Issue Board of your repo, [see GitLab’s Issue Board documentation](https://docs.gitlab.com/ee/user/project/issue_board.html). You can find the Issue Board from GitLab’s left panel menu: go to your group repo’s GitLab frontpage -> Issues -> Board.
 
-A short Youtube video introduction to Issue Board [“Announcing the GitLab Issue Board”](https://www.youtube.com/watch?v=UWsJ8tkHAa8). You should be able to see the basic idea and functioning.
+### Architecture
+Here is diagram describing the overall architecture:
+![sandwich maker diagram](other-files/sandwich-maker-diagram.png)
+[Figma view link](https://www.figma.com/file/rZEwcRM8uRmPTwKIJSSEDr/sandwich-maker-diagram?type=whiteboard&node-id=0%3A1&t=X3tzOmvYt47fWMCK-1)
 
-When using the Issue Board, your group should first discuss what lists you would like to use, “To do”, "Research", and “Doing” are the defaults that are offered to be created for a new issue board. Then, whenever your group starts new tasks, or you have an issue (bug, improvement, etc…) with your code, then you should create issues in GitLab for these. Then your group assigns each issue/task to group member(s). The assigned student is responsible for handling the issue, and moving it from that list to next in the Issue Board, until it is in the “Closed”/"Done"/"Revied" list.
+We go over each component in the system:
+#### Server A 
+Acts as the main server in our system which server the API. 
 
-Your group should decide who and when will create the GitLab issues and assign them to members.
+Here some things to note about this server:
+- The app **entry point** is on program.cs
+- The app is using **dependency injection** where the services are being registers in program.cs
+- The **Request pipeline** is also configured in program.cs  
+- The app use controller attribute **routing**: 
+    - Controller are named API in the code
+    - The routes are defined as attributes on each endpoint in the APIs
+- The app is hosting **Swagger UI** on root directory
+- The app is hosting **real time communication hub**:
+    - SignalR is being used.
+    - SignalR uses WebSocket by default and may fall back to other methods if web socket not available.
+    - The purpose of real time communication is to notify the frontend about order status changes.
+- The app is hosting a "**hosted service**", things to note about dotnet hosted services:
+    - Hosted services are singleton objects that are held in the app host
+    - Hosted services trigger start function on the application startup 
+    - Hosted services trigger stop function on application shutdown
+    - Hosted services support dependency injection 
+- The app is hosting `OrderStatusUpdater`, which do the following:
+    - Subscribe to `orderStatusUpdates` Queue.
+    - Update the state of orders
+    - Publish real time update notification on the Real-time communication hub.
+- The app implement CRUD operation on Sandwich API:
+    - Write operation require login. 
+    - The sandwiches information is stored in memory collections.
+- The app is implementing authentication and authorization:
+    - The auth system is using Microsoft Identity library 
+    - The store users in MS SQL Server database
+    - The authentication is using cookie authentication with session
 
-### Documentation of the created system
 
-The following describes what needs to be documented during the project.
+#### Server B
+Act as order processor and emulate making sandwiches.
+- The app **entry point** is on program.cs
+- The app is using **dependency injection** where the services are being registers in program.cs
+- The app is hosting a **hosted service** (more about that was mentioned on server A)
+- The app is hosting `OrderProcessor` hosted service, which do the following:
+    - Subscribe to orders from `orders` queue
+    - Publish order received message on `orderStatusUpdates`
+    - Publish order read after 5s delay on `orderStatusUpdates`
 
-Those groups that use other technologies/architecture than described need to apply these instructions to fit their choices.
+#### Rabbit MQ
+RabbitMQ was used for asynchronous communication between server A and server B; The Queue system is very simple in this case as direct exchanges are used, which binds on a single queue; Therefore we can say that, Server A publish orders on `orders` queue and then server B updates server A about the order status on `orderStatusUpdates` queue.  
 
-#### System architecture
+One important feature of the system is the dead letter queue. Server A could send message to which server B can handle; This could jam the system as server B get stuck on trying to process a bad message. To avoid that, message that have bad format are sent to dead letter queue, which then needs manual investigation from the developer.
 
-The focus should be on applying what has been learned in the course about Web Architecture. Using proper architectural descriptions and UML diagrams would be appropriate, but the groups are welcome to use any reasonable way of describing the system.
+#### Frontend
+The frontend is following vue standard architecture. 
 
-Matters to describe include architectural patterns, components, component's roles, communication within the system and with external components, and others things, that the group finds important when describing the architecture. Describe the system with enough detail, so that a technical person with no prior knowledge of the system would be able to understand it. Use images and diagrams whenever you are able.
+Here are some things to note:
+- The app is using Pinia for **state management** 
+- The app uses axios to make **HTTP requests** from the state store.
+- The app is also using **vue router** to route to different views like Orders page.
+- The app is using "**bootstrap**" for **css**
+- The app has **`notification`** component and store, which do the following:
+    - Show message to the user when successful requests are made.
+    - Show red error message when request fail.
+    - show loading indicator when waiting for response from the API
+    - Note: best way to test this, is to shut down the main server and try to use the app 
+- The app using **real-time communication**:
+    - The app is utilizing SignalR client library.  
+    - The app connection to Hub when entering Orders page.
+    - The app fetches the orders again when it receives order update signal.
+- The app has auth implementation and integration with the backend
 
-It is important to evaluate the architecture and compare it to other possible architectures. Elaborate on the strengths and weaknesses of this architecture when compared to its purpose and tasks as described in the assignment document. Consider other architectures that would have been able to fulfill the system's described purpose and tasks. This part is where your group gets to explore architectures that could have been used to produce a system with the same or at least similar functionality. The sky is the limit here, get creative!
 
-#### Used technologies
+### Summary for base features
+- Docker Compose hosting/deployment 
+- Server to server communication with RabbitMQ
+- SPA app
+- API CRUD
 
-Description of the technologies used in the system (Node, RabbitMQ, AMPQ, ...), how the technologies were used in the project, and the group's view of the technologies from your use. Could other/better alternatives have been used? Or is there an alternative that would have been more interesting to the group?
 
-#### How the produced system can be tested
-
-Here group describes how course personnel can test their system. A complete HOWTO on running your system, with easily copy-pastable examples.
-
-### Learnign during the project
-
-A group learning diary, where group members note down the learning during the project. Short descriptions of who, what, and when are sufficient. Could be a link to GitLab Issue, that has more information.
-
-This information is interesting to the course personnel, too. We get to see if the project enabled learning as designed.
-
-## Coding during the project
-
-Code for each component _must_ be placed in its own directories to maintain a healthy repository. For the groups' convenience sub-directories for _server-a_, _rabbitmq_, and _server-b_ have been created in the repository. Groups can choose to use this directory structure, or groups can remove/modify it to their needs, as long as the code for each component is placed in its own directory.
-
-The directories have files like _Dockerfiles_ that groups can use as the basis of their work, but as with the directory structure, the groups are free to do with them as they will. Groups should however read through the files, even if they choose to remove them, as they contain help and comments.
-
-Docker Compose file _'docker-compose.yml'_ must be placed in the root directory of the repository where it is now.
-
-Commenting your code is important in places where the code might not be immediately obvious. Comments should be detailed enough that people outside your group can understand the code with the help of the comments.
-
-The `docker-compose.yml` -file and other files have comments by the course personnel. Groups can remove these comments if they wish to do so.
+### Summary for Additional Features and Technologies
+- Health check for RabbitMQ (Compose) (ensure RabbitMQ is working before starting server A and B)
+- State Management Store with Pinia (frontend) 
+- Dead Letter Queue (server B)
+- Nice and responsive frontend UI with Bootstrap
+- Production grade frontend Dockerfile (with Nginx)
+- Loading indicator (frontend)
+- Action notifications (frontend)
+- Login (Authentication)
+- Require authentication for Create sandwich (Full CRUD API only because no time)
+- RTC communication (server A - frontend) 
